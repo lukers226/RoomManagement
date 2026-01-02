@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../controllers/spent_controller.dart';
 import '../app_colors.dart';
+import '../widgets/snack_bar.dart';
 
 class SpentView extends StatelessWidget {
   const SpentView({super.key});
@@ -75,8 +76,9 @@ class SpentView extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color:
-                                AppColors.secondaryColor.withValues(alpha: 0.15),
+                            color: AppColors.secondaryColor.withValues(
+                              alpha: 0.15,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
@@ -128,9 +130,7 @@ class SpentView extends StatelessWidget {
                             ] else
                               Row(
                                 children: [
-                                  Expanded(
-                                    child: _memberDropdown(controller),
-                                  ),
+                                  Expanded(child: _memberDropdown(controller)),
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: _categoryDropdown(controller),
@@ -157,14 +157,14 @@ class SpentView extends StatelessWidget {
                               width: double.infinity,
                               height: 52,
                               child: ElevatedButton(
-                                onPressed: controller.submitExpense,
+                                onPressed: () {
+                                  AppSnackBar.error(context, " Done");
+                                },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      AppColors.secondaryColor,
+                                  backgroundColor: AppColors.secondaryColor,
                                   elevation: 6,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(14),
+                                    borderRadius: BorderRadius.circular(14),
                                   ),
                                 ),
                                 child: const Text(
@@ -195,17 +195,13 @@ class SpentView extends StatelessWidget {
   Widget _memberDropdown(SpentController controller) {
     return DropdownButtonFormField<String>(
       isExpanded: true,
-      decoration:
-          _inputDecoration(label: 'Member', icon: Icons.person_rounded),
+      decoration: _inputDecoration(label: 'Member', icon: Icons.person_rounded),
       value: controller.selectedMember,
       items: controller.members
           .map(
             (member) => DropdownMenuItem<String>(
               value: member,
-              child: Text(
-                member,
-                overflow: TextOverflow.ellipsis,
-              ),
+              child: Text(member, overflow: TextOverflow.ellipsis),
             ),
           )
           .toList(),
@@ -220,17 +216,16 @@ class SpentView extends StatelessWidget {
   Widget _categoryDropdown(SpentController controller) {
     return DropdownButtonFormField<String>(
       isExpanded: true,
-      decoration:
-          _inputDecoration(label: 'Category', icon: Icons.category_rounded),
+      decoration: _inputDecoration(
+        label: 'Category',
+        icon: Icons.category_rounded,
+      ),
       value: controller.selectedCategory,
       items: controller.categories
           .map(
             (category) => DropdownMenuItem<String>(
               value: category,
-              child: Text(
-                category,
-                overflow: TextOverflow.ellipsis,
-              ),
+              child: Text(category, overflow: TextOverflow.ellipsis),
             ),
           )
           .toList(),
@@ -257,10 +252,7 @@ class SpentView extends StatelessWidget {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(
-          color: AppColors.secondaryColor,
-          width: 1.5,
-        ),
+        borderSide: BorderSide(color: AppColors.secondaryColor, width: 1.5),
       ),
     );
   }
