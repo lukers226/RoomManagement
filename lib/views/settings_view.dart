@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../controllers/settings_controller.dart';
+import '../controllers/login_controller.dart';
 import '../app_colors.dart';
 
 class SettingsView extends StatelessWidget {
@@ -28,6 +29,13 @@ class SettingsView extends StatelessWidget {
               icon: const Icon(Icons.menu_rounded),
               onPressed: () {},
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout_rounded),
+                onPressed: () => _showLogoutDialog(context),
+                tooltip: 'Logout',
+              ),
+            ],
           ),
           body: SafeArea(
             child: SingleChildScrollView(
@@ -103,15 +111,23 @@ class SettingsView extends StatelessWidget {
                   // 🔹 Per Person Amount Card
                   _settingsCard(
                     title: 'Per Person Amount',
-                    subtitle: 'Set monthly room contribution',
+                    subtitle: controller.isCurrentUserAdmin()
+                        ? 'Current: ₹${controller.perPersonAmount.toStringAsFixed(0)} | Set monthly room contribution'
+                        : 'Current: ₹${controller.perPersonAmount.toStringAsFixed(0)} | Only admin can edit',
                     child: Column(
                       children: [
                         TextFormField(
                           controller: controller.amountController,
                           keyboardType: TextInputType.number,
+                          enabled: controller.isCurrentUserAdmin(),
                           decoration: _inputDecoration(
                             label: 'Room Amount per Person',
                             icon: Icons.currency_rupee_rounded,
+                          ).copyWith(
+                            filled: controller.isCurrentUserAdmin(),
+                            fillColor: controller.isCurrentUserAdmin()
+                                ? Colors.grey.shade100
+                                : Colors.grey.shade200,
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -119,20 +135,22 @@ class SettingsView extends StatelessWidget {
                           width: double.infinity,
                           height: 48,
                           child: ElevatedButton(
-                            onPressed:
-                                controller.setPerPersonAmount,
+                            onPressed: controller.isCurrentUserAdmin()
+                                ? controller.setPerPersonAmount
+                                : null,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  AppColors.secondaryColor,
-                              elevation: 4,
+                              backgroundColor: controller.isCurrentUserAdmin()
+                                  ? AppColors.secondaryColor
+                                  : Colors.grey,
+                              elevation: controller.isCurrentUserAdmin() ? 4 : 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.circular(14),
                               ),
                             ),
-                            child: const Text(
-                              'Save Amount',
-                              style: TextStyle(
+                            child: Text(
+                              controller.isCurrentUserAdmin() ? 'Save Amount' : 'Admin Only',
+                              style: const TextStyle(
                                 fontSize: 15,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
@@ -189,9 +207,40 @@ class SettingsView extends StatelessWidget {
                     ),
                   ),
                 ],
+
               ),
             ),
           ),
+        );
+      },
+    );
+  }
+
+  // 🔹 Logout Dialog
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const Text('Are you sure you want to logout?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                final loginController = Get.find<LoginController>();
+                loginController.logout();
+              },
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -210,7 +259,7 @@ class SettingsView extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
