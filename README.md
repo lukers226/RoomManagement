@@ -1,16 +1,33 @@
-# room
+🏠 Room Management App (Flutter)
 
-A new Flutter project.
+A simple and efficient Room Management application built with Flutter, designed to manage rooms, availability, and basic room-related operations with a clean UI.
 
-## Getting Started
+✨ Features
 
-This project is a starting point for a Flutter application.
+Room listing & details
 
-A few resources to get you started if this is your first Flutter project:
+Room availability status
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Clean and responsive Flutter UI
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Scalable project structure
+
+🛠 Tech Stack
+
+Flutter
+
+Dart
+
+🚀 Getting Started
+flutter pub get
+flutter run
+
+📚 Resources
+
+Flutter Documentation
+
+Flutter Codelabs
+
+👨‍💻 Author
+
+Built with ❤️ using Flutter
