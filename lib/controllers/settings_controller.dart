@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'login_controller.dart';
+import '../widgets/snack_bar.dart';
 
 class SettingsController extends GetxController {
   final TextEditingController amountController = TextEditingController();
@@ -33,10 +34,10 @@ class SettingsController extends GetxController {
           .replaceAll('+91', '')
           .replaceAll('+', '');
       _isAdmin = adminPhoneNumbers.contains(numberWithoutCode);
-      print('Admin status checked: $_isAdmin, Phone: ${loginController.phoneNumber}');
+      debugPrint('Admin status checked: $_isAdmin, Phone: ${loginController.phoneNumber}');
     } catch (e) {
       _isAdmin = false;
-      print('LoginController not found during init: $e');
+      debugPrint('LoginController not found during init: $e');
     }
   }
 
@@ -56,43 +57,25 @@ class SettingsController extends GetxController {
       }
     } catch (e) {
       // If loading fails, keep the default value
-      print('Error loading settings: $e');
+      debugPrint('Error loading settings: $e');
     }
   }
 
-  void setPerPersonAmount() async {
+  void setPerPersonAmount(dynamic context) async {
     // Check if user is admin
     if (!_isAdmin) {
-      Get.snackbar(
-        'Access Denied',
-        'Only the admin can update the per person amount',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackBar.error(context, 'Only the admin can update the per person amount');
       return;
     }
 
     if (amountController.text.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter an amount',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackBar.error(context, 'Please enter an amount');
       return;
     }
 
     final amount = double.tryParse(amountController.text);
     if (amount == null || amount <= 0) {
-      Get.snackbar(
-        'Error',
-        'Please enter a valid amount',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackBar.error(context, 'Please enter a valid amount');
       return;
     }
 
@@ -108,36 +91,18 @@ class SettingsController extends GetxController {
       }, SetOptions(merge: true)); // Use merge to update only this field
 
       perPersonAmount = amount;
-      amountController.clear();
+      amountController.text = amount.toStringAsFixed(0); // Keep the value in the text field
       update();
 
-      Get.snackbar(
-        'Success',
-        'Per person amount updated to ₹${amount.toStringAsFixed(0)}',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackBar.success(context, 'Per person amount updated to ₹${amount.toStringAsFixed(0)}');
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to update amount: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackBar.error(context, 'Failed to update amount: $e');
     }
   }
 
-  void sendMessage() async {
+  void sendMessage(dynamic context) async {
     if (messageController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter a message',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackBar.error(context, 'Please enter a message');
       return;
     }
 
@@ -154,21 +119,9 @@ class SettingsController extends GetxController {
 
       messageController.clear();
 
-      Get.snackbar(
-        'Success',
-        'Message sent to all users!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackBar.success(context, 'Message sent to all users!');
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to send message: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackBar.error(context, 'Failed to send message: $e');
     }
   }
 

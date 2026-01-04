@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../controllers/spent_controller.dart';
 import '../app_colors.dart';
-import '../widgets/snack_bar.dart';
 
 class SpentView extends StatelessWidget {
   const SpentView({super.key});
@@ -44,7 +44,7 @@ class SpentView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 10,
                           offset: const Offset(0, 6),
                         ),
@@ -113,12 +113,33 @@ class SpentView extends StatelessWidget {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Expense Details',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                              ),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.secondaryColor.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: SvgPicture.asset(
+                                    'assets/images/money.svg',
+                                    width: 24,
+                                    height: 24,
+                                    colorFilter: ColorFilter.mode(
+                                      AppColors.secondaryColor,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                const Text(
+                                  'Expense Details',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 20),
 
@@ -146,7 +167,12 @@ class SpentView extends StatelessWidget {
                               keyboardType: TextInputType.number,
                               decoration: _inputDecoration(
                                 label: 'Amount Spent',
-                                icon: Icons.currency_rupee_rounded,
+                                child: SvgPicture.asset(
+                                  'assets/images/money.svg',
+                                  width: 10,
+                                  height: 10,
+                      
+                                ),
                               ),
                             ),
 
@@ -157,9 +183,7 @@ class SpentView extends StatelessWidget {
                               width: double.infinity,
                               height: 52,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  AppSnackBar.error(context, " Done");
-                                },
+                                onPressed: () => controller.submitExpense(context),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.secondaryColor,
                                   elevation: 6,
@@ -195,7 +219,14 @@ class SpentView extends StatelessWidget {
   Widget _memberDropdown(SpentController controller) {
     return DropdownButtonFormField<String>(
       isExpanded: true,
-      decoration: _inputDecoration(label: 'Member', icon: Icons.person_rounded),
+      decoration: _inputDecoration(
+        label: 'Member',
+        child: SvgPicture.asset(
+          'assets/images/room.svg',
+          width: 10,
+          height: 10,
+        ),
+      ),
       value: controller.selectedMember,
       items: controller.members
           .map(
@@ -218,7 +249,15 @@ class SpentView extends StatelessWidget {
       isExpanded: true,
       decoration: _inputDecoration(
         label: 'Category',
-        icon: Icons.category_rounded,
+        child: SvgPicture.asset(
+          'assets/images/category.svg',
+          width: 20,
+          height: 20,
+          colorFilter: ColorFilter.mode(
+            AppColors.secondaryColor,
+            BlendMode.srcIn,
+          ),
+        ),
       ),
       value: controller.selectedCategory,
       items: controller.categories
@@ -239,11 +278,12 @@ class SpentView extends StatelessWidget {
   // 🔹 INPUT DECORATION
   InputDecoration _inputDecoration({
     required String label,
-    required IconData icon,
+    IconData? icon,
+    Widget? child,
   }) {
     return InputDecoration(
       labelText: label,
-      prefixIcon: Icon(icon, color: AppColors.secondaryColor),
+      prefixIcon: icon != null ? Icon(icon, color: AppColors.secondaryColor) : child,
       filled: true,
       fillColor: Colors.grey.shade100,
       border: OutlineInputBorder(

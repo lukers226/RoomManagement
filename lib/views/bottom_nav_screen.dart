@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'home_view.dart';
 import 'spent_view.dart';
@@ -46,7 +47,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
+              color: Colors.black.withValues(alpha: 0.1),
             )
           ],
         ),
@@ -69,7 +70,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
               duration: const Duration(milliseconds: 400),
               tabBackgroundColor: AppColors.secondaryColor,
               color: Colors.grey,
-              tabs: const [
+              tabs: [
                 GButton(
                   icon: Icons.home,
                   text: 'Home',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../widgets/snack_bar.dart';
 
 class SpentController extends GetxController {
   String? selectedMember;
@@ -26,15 +27,9 @@ class SpentController extends GetxController {
     'Chicken'
   ];
 
-  void submitExpense() async {
+  void submitExpense(dynamic context) async {
     if (selectedMember == null || selectedCategory == null || amountController.text.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please fill all fields',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackBar.error(context, 'Please fill all fields');
       return;
     }
 
@@ -48,13 +43,17 @@ class SpentController extends GetxController {
         'timestamp': FieldValue.serverTimestamp(),
       });
 
-      Get.snackbar(
-        'Success',
-        'Expense added successfully!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      // Update totalPaid by subtracting the expense amount
+      final expenseAmount = double.parse(amountController.text);
+      await FirebaseFirestore.instance
+          .collection(dotenv.env['ROOM_SETTINGS_COLLECTION'] ?? 'room_settings')
+          .doc('main_settings')
+          .update({
+        'totalPaid': FieldValue.increment(-expenseAmount),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      AppSnackBar.success(context, 'Expense added successfully!');
 
       // Reset form
       selectedMember = null;
@@ -62,13 +61,7 @@ class SpentController extends GetxController {
       amountController.clear();
       update();
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to add expense: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackBar.error(context, 'Failed to add expense: $e');
     }
   }
 

@@ -15,6 +15,11 @@ class SettingsView extends StatelessWidget {
       builder: (controller) {
         final now = DateTime.now();
 
+        // Initialize amount controller with current value if empty
+        if (controller.amountController.text.isEmpty) {
+          controller.amountController.text = controller.perPersonAmount.toStringAsFixed(0);
+        }
+
         return Scaffold(
           backgroundColor: const Color(0xFFF5F6FA),
           appBar: AppBar(
@@ -113,53 +118,102 @@ class SettingsView extends StatelessWidget {
                     title: 'Per Person Amount',
                     subtitle: controller.isCurrentUserAdmin()
                         ? 'Current: ₹${controller.perPersonAmount.toStringAsFixed(0)} | Set monthly room contribution'
-                        : 'Current: ₹${controller.perPersonAmount.toStringAsFixed(0)} | Only admin can edit',
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: controller.amountController,
-                          keyboardType: TextInputType.number,
-                          enabled: controller.isCurrentUserAdmin(),
-                          decoration: _inputDecoration(
-                            label: 'Room Amount per Person',
-                            icon: Icons.currency_rupee_rounded,
-                          ).copyWith(
-                            filled: controller.isCurrentUserAdmin(),
-                            fillColor: controller.isCurrentUserAdmin()
-                                ? Colors.grey.shade100
-                                : Colors.grey.shade200,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: ElevatedButton(
-                            onPressed: controller.isCurrentUserAdmin()
-                                ? controller.setPerPersonAmount
-                                : null,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: controller.isCurrentUserAdmin()
-                                  ? AppColors.secondaryColor
-                                  : Colors.grey,
-                              elevation: controller.isCurrentUserAdmin() ? 4 : 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(14),
+                        : 'Monthly room contribution amount',
+                    child: controller.isCurrentUserAdmin()
+                        ? Column(
+                            children: [
+                              TextFormField(
+                                controller: controller.amountController,
+                                keyboardType: TextInputType.number,
+                                enabled: controller.isCurrentUserAdmin(),
+                                readOnly: !controller.isCurrentUserAdmin(),
+                                decoration: _inputDecoration(
+                                  label: 'Room Amount per Person',
+                                  icon: Icons.currency_rupee_rounded,
+                                ).copyWith(
+                                  filled: controller.isCurrentUserAdmin(),
+                                  fillColor: controller.isCurrentUserAdmin()
+                                      ? Colors.grey.shade100
+                                      : Colors.grey.shade200,
+                                ),
+                              ),
+                              if (controller.isCurrentUserAdmin()) ...[
+                                const SizedBox(height: 20),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 48,
+                                  child: ElevatedButton(
+                                    onPressed: () => controller.setPerPersonAmount(context),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.secondaryColor,
+                                      elevation: 4,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Save Amount',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          )
+                        : Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryColor.withValues(alpha: 0.05),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppColors.secondaryColor.withValues(alpha: 0.2),
+                                width: 1.5,
                               ),
                             ),
-                            child: Text(
-                              controller.isCurrentUserAdmin() ? 'Save Amount' : 'Admin Only',
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.secondaryColor,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: const Icon(
+                                    Icons.currency_rupee_rounded,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '₹${controller.perPersonAmount.toStringAsFixed(0)}',
+                                      style: const TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    Text(
+                                      'per person per month',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade600,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
                   ),
 
                   const SizedBox(height: 20),
@@ -184,7 +238,7 @@ class SettingsView extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerRight,
                           child: ElevatedButton.icon(
-                            onPressed: controller.sendMessage,
+                            onPressed: () => controller.sendMessage(context),
                             icon: const Icon(Icons.send_rounded, color: Colors.white,),
                             label: const Text('Send', style: TextStyle(color: Colors.white),),
                             style: ElevatedButton.styleFrom(
