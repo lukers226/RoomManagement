@@ -30,10 +30,7 @@ class SettingsView extends StatelessWidget {
               'Settings',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
-            leading: IconButton(
-              icon: const Icon(Icons.menu_rounded),
-              onPressed: () {},
-            ),
+            centerTitle: true,
             actions: [
               IconButton(
                 icon: const Icon(Icons.logout_rounded),
@@ -120,37 +117,43 @@ class SettingsView extends StatelessWidget {
                         TextFormField(
                           controller: controller.amountController,
                           keyboardType: TextInputType.number,
+                          enabled: controller.isCurrentUserAdmin(),
+                          readOnly: !controller.isCurrentUserAdmin(),
                           decoration: _inputDecoration(
                             label: 'Room Amount per Person',
                             icon: Icons.currency_rupee_rounded,
+                          ).copyWith(
+                            filled: true,
+                            fillColor: controller.isCurrentUserAdmin()
+                                ? Colors.grey.shade100
+                                : Colors.grey.shade200,
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: ElevatedButton(
-                            onPressed:
-                                controller.setPerPersonAmount,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  AppColors.secondaryColor,
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(14),
+                        if (controller.isCurrentUserAdmin()) ...[
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 48,
+                            child: ElevatedButton(
+                              onPressed: () => controller.setPerPersonAmount(context),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.secondaryColor,
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
                               ),
-                            ),
-                            child: const Text(
-                              'Save Amount',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
+                              child: const Text(
+                                'Save Amount',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ],
                     ),
                   ),
@@ -175,7 +178,7 @@ class SettingsView extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerRight,
                           child: ElevatedButton.icon(
-                            onPressed: controller.sendMessage,
+                            onPressed: () => controller.sendMessage(context),
                             icon: const Icon(Icons.send_rounded, color: Colors.white,),
                             label: const Text('Send', style: TextStyle(color: Colors.white),),
                             style: ElevatedButton.styleFrom(

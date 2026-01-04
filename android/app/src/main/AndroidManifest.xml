@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="room"
+        android:label="7 Puligo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

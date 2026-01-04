@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'home_view.dart';
 import 'spent_view.dart';
@@ -31,12 +32,20 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset(
-          asset,
-          height: 24,
-          width: 24,
-          fit: BoxFit.contain,
-        ),
+        asset.endsWith('.svg')
+            ? SvgPicture.asset(
+                asset,
+                height: 24,
+                width: 24,
+                fit: BoxFit.contain,
+            
+              )
+            : Image.asset(
+                asset,
+                height: 24,
+                width: 24,
+                fit: BoxFit.contain,
+              ),
         const SizedBox(height: 6),
 
         // ✅ UNDERLINE INDICATOR
@@ -88,7 +97,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
             label: 'Members',
           ),
           BottomNavigationBarItem(
-            icon: navItem(SvgManager.members, 3),
+            icon: navItem(SvgManager.room, 3),
             label: 'Settings',
           ),
         ],

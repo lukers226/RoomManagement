@@ -42,11 +42,16 @@ class _MyAppState extends State<MyApp> {
     final prefs = await SharedPreferences.getInstance();
     final savedPhone = prefs.getString('logged_in_phone');
 
+    // Get admin phone numbers from environment variables
     final adminPhonesString = dotenv.env['ADMIN_PHONE_NUMBERS'] ?? '';
     final allowedPhoneNumbers = adminPhonesString.split(',').map((e) => e.trim()).toList();
 
-    if (savedPhone != null && allowedPhoneNumbers.contains(savedPhone)) {
-      
+    // Get normal user phone numbers from environment variables
+    final normalPhonesString = dotenv.env['NORMAL_USER_PHONE_NUMBERS'] ?? '';
+    final normalPhoneNumbers = normalPhonesString.split(',').map((e) => e.trim()).toList();
+
+    if (savedPhone != null && (allowedPhoneNumbers.contains(savedPhone) || normalPhoneNumbers.contains(savedPhone))) {
+      // Create and register LoginController for logged-in users
       final loginController = LoginController();
       loginController.phoneNumber = '+$savedPhone';
       loginController.isLoggedIn = true;

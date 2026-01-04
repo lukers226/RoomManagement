@@ -128,14 +128,7 @@ class LoginView extends StatelessWidget {
 
                       const SizedBox(height: 30),
 
-                      // 🔹 Footer Text
-                      Text(
-                        "We’ll send you a verification code",
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
+                     
 
                       const SizedBox(height: 20),
                     ],

@@ -52,10 +52,7 @@ class _MembersViewState extends State<MembersView>
               'Members',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
-            leading: IconButton(
-              icon: const Icon(Icons.menu_rounded),
-              onPressed: () {},
-            ),
+            centerTitle: true,
           ),
           body: SafeArea(
             child: Padding(

@@ -19,12 +19,7 @@ class HomeView extends StatelessWidget {
             backgroundColor: AppColors.secondaryColor,
             foregroundColor: AppColors.white,
             title: const Text('Home', style: TextStyle(fontWeight: FontWeight.w600),),
-            leading: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer(); // If you add a drawer later
-              },
-            ),
+            centerTitle: true,
           ),
           body: Container(
             decoration: const BoxDecoration(

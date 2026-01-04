@@ -26,10 +26,7 @@ class SpentView extends StatelessWidget {
               'Add Expense',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
-            leading: IconButton(
-              icon: const Icon(Icons.menu_rounded),
-              onPressed: () {},
-            ),
+            centerTitle: true,
           ),
           body: SafeArea(
             child: SingleChildScrollView(
@@ -184,9 +181,7 @@ class SpentView extends StatelessWidget {
                               width: double.infinity,
                               height: 52,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  AppSnackBar.error(context, " Done");
-                                },
+                                onPressed: () => controller.submitExpense(context),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.secondaryColor,
                                   elevation: 6,
@@ -224,11 +219,7 @@ class SpentView extends StatelessWidget {
       isExpanded: true,
       decoration: _inputDecoration(
         label: 'Member',
-        child: SvgPicture.asset(
-          'assets/images/room.svg',
-          width: 10,
-          height: 10,
-        ),
+        child: Icon(Icons.person_2_rounded, color: AppColors.secondaryColor),
       ),
       value: controller.selectedMember,
       items: controller.members
