@@ -88,8 +88,9 @@ class SettingsView extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color:
-                                AppColors.secondaryColor.withValues(alpha: 0.15),
+                            color: AppColors.secondaryColor.withValues(
+                              alpha: 0.15,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
@@ -105,10 +106,7 @@ class SettingsView extends StatelessWidget {
 
                   const Text(
                     'Room Settings',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
 
                   const SizedBox(height: 16),
@@ -116,104 +114,45 @@ class SettingsView extends StatelessWidget {
                   // 🔹 Per Person Amount Card
                   _settingsCard(
                     title: 'Per Person Amount',
-                    subtitle: controller.isCurrentUserAdmin()
-                        ? 'Current: ₹${controller.perPersonAmount.toStringAsFixed(0)} | Set monthly room contribution'
-                        : 'Monthly room contribution amount',
-                    child: controller.isCurrentUserAdmin()
-                        ? Column(
-                            children: [
-                              TextFormField(
-                                controller: controller.amountController,
-                                keyboardType: TextInputType.number,
-                                enabled: controller.isCurrentUserAdmin(),
-                                readOnly: !controller.isCurrentUserAdmin(),
-                                decoration: _inputDecoration(
-                                  label: 'Room Amount per Person',
-                                  icon: Icons.currency_rupee_rounded,
-                                ).copyWith(
-                                  filled: controller.isCurrentUserAdmin(),
-                                  fillColor: controller.isCurrentUserAdmin()
-                                      ? Colors.grey.shade100
-                                      : Colors.grey.shade200,
-                                ),
-                              ),
-                              if (controller.isCurrentUserAdmin()) ...[
-                                const SizedBox(height: 20),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 48,
-                                  child: ElevatedButton(
-                                    onPressed: () => controller.setPerPersonAmount(context),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.secondaryColor,
-                                      elevation: 4,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(14),
-                                      ),
-                                    ),
-                                    child: const Text(
-                                      'Save Amount',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ],
-                          )
-                        : Container(
-                            padding: const EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: AppColors.secondaryColor.withValues(alpha: 0.05),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: AppColors.secondaryColor.withValues(alpha: 0.2),
-                                width: 1.5,
+                    subtitle: 'Set monthly room contribution',
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: controller.amountController,
+                          keyboardType: TextInputType.number,
+                          decoration: _inputDecoration(
+                            label: 'Room Amount per Person',
+                            icon: Icons.currency_rupee_rounded,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed:
+                                controller.setPerPersonAmount,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  AppColors.secondaryColor,
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(14),
                               ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.secondaryColor,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Icon(
-                                    Icons.currency_rupee_rounded,
-                                    color: Colors.white,
-                                    size: 24,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '₹${controller.perPersonAmount.toStringAsFixed(0)}',
-                                      style: const TextStyle(
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                    Text(
-                                      'per person per month',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade600,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            child: const Text(
+                              'Save Amount',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
+                        ),
+                      ],
+                    ),
                   ),
 
                   const SizedBox(height: 20),
@@ -230,27 +169,22 @@ class SettingsView extends StatelessWidget {
                           decoration: _inputDecoration(
                             label: 'Enter your message',
                             icon: Icons.message_rounded,
-                          ).copyWith(
-                            alignLabelWithHint: true,
-                          ),
+                          ).copyWith(alignLabelWithHint: true),
                         ),
                         const SizedBox(height: 16),
                         Align(
                           alignment: Alignment.centerRight,
                           child: ElevatedButton.icon(
-                            onPressed: () => controller.sendMessage(context),
+                            onPressed: controller.sendMessage,
                             icon: const Icon(Icons.send_rounded, color: Colors.white,),
                             label: const Text('Send', style: TextStyle(color: Colors.white),),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  AppColors.secondaryColor,
+                              backgroundColor: AppColors.secondaryColor,
                               elevation: 4,
                               shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 20,
                                 vertical: 12,
                               ),
@@ -324,18 +258,12 @@ class SettingsView extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-            ),
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
           ),
           const SizedBox(height: 16),
           child,
@@ -360,10 +288,7 @@ class SettingsView extends StatelessWidget {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(
-          color: AppColors.secondaryColor,
-          width: 1.5,
-        ),
+        borderSide: BorderSide(color: AppColors.secondaryColor, width: 1.5),
       ),
     );
   }

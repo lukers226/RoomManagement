@@ -181,7 +181,7 @@ class HomeView extends StatelessWidget {
                             child: Text(
                               'View All',
                               style: TextStyle(
-                                color: AppColors.secondaryColor,
+                                color: AppColors.primaryColor,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),

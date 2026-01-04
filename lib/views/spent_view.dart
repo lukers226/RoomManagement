@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../controllers/spent_controller.dart';
 import '../app_colors.dart';
+import '../widgets/snack_bar.dart';
 
 class SpentView extends StatelessWidget {
   const SpentView({super.key});
@@ -183,7 +184,9 @@ class SpentView extends StatelessWidget {
                               width: double.infinity,
                               height: 52,
                               child: ElevatedButton(
-                                onPressed: () => controller.submitExpense(context),
+                                onPressed: () {
+                                  AppSnackBar.error(context, " Done");
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.secondaryColor,
                                   elevation: 6,
